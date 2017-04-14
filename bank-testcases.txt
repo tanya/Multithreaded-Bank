@@ -1,0 +1,74 @@
+bank-testcases.txt
+Aditya Geria (aag177, section 3)
+Tanya Balaraju (aag177, section 3)
+PA5 - Multithreaded bank system
+
+Test case 1: Simple case 
+> One client, one server (local host)
+
+> Server parent process with PID X is waiting for session
+> Upon finding session, a child process with PID Y is created to make the client_service call
+> Server asks for inputs, client also prompts for more inputs
+> Client attempts to open "John Cena"
+> Server processes the token, and adds John Cena to the list of accounts with a balance of 0.00
+> Server waits for more inputs, client prompts for more inputs
+> Client enters balance, server writes 0.00 to the client
+> Client sees 0.00
+> Each 20 seconds, the list of accounts is printed.
+> Server waits for more inputs, client prompts for more inputs
+> Client enters credit 100
+> Server records the command, tokenizes it, and adds 100 to the credit of "John Cena"
+> Server writes current balance to client, along with "credited..."
+> Client enters exit, server disconnects with client and the client program prints a thank you note
+
+Test case 2: Simple case + Debiting invalid amount + invalid start + invalid command
+> Same scenario as last
+
+> Server parent process with PID X is waiting for session
+> Upon finding session, a child process with PID Y is created to make the client_service call
+> Server asks for inputs, client also prompts for more inputs
+> Client attempts to "strat Stevie Ray Vaughan" (this is a joke because Stevie Ray Vaughans favorite instrument was a strat)
+> Server does not recognize command, and prompts a restart.
+> Client restarts, and enters "start Stevie Ray Vaughan"
+> No accounts with that name exist, server writes to client saying invalid name and to restart communication
+> Client restarts, and enters "open Stevie Ray Vaughan" upon prompt
+> Server processes the token, and adds Stevie Ray Vaughan to the list of accounts with a balance of 0.00
+> Server waits for more inputs, client prompts for more inputs
+> Client enters balance, server writes 0.00 to the client
+> Client sees 0.00
+> Each 20 seconds, the list of accounts is printed. (John Cena, Stevie Ray Vaughan)
+> Server waits for more inputs, client prompts for more inputs
+> Client enters credit 100
+> Server records the command, tokenizes it, and adds 100 to the credit of "Stevie Ray Vaughan"
+> Server writes current balance to client, along with "credited..."
+> Server is waiting/printing,  and client is prompting for more inputs every 1-2 seconds
+> Client sends "debit 400". Server writes "invalid amount" to the client and rejects the command
+> Client enters exit, server disconnects with client and the client program prints a thank you note
+
+Test case 3: 2 clients attempting to connect to server 
+> 2 clients, can be localhost or differnt machines
+
+> Server parent process with PID X is waiting to accept session
+> Client 1 connects, spawns child process with PID Y
+> Client 2 connects, spawns child process with PID Z
+> Client 1 is prompted, and enters "start John Cena"
+> Client 2 user is waiting patiently, thinking of his options
+> Client 1 is in a John Cena session and is doing business
+> Client 2 decides to "start John Cena"
+> Client 2 is denied access, because John Cena is already in session
+> Client 2 must restart connection (similar to logging in and out)
+> Client 1 finishes
+> Client 2 can now start a John Cena session
+> Bank is still printing the list of accounts every 20 seconds
+
+Test case 4: MMAP example + SIGINT stop
+> 2 return customers using the bank
+
+> Server parent process with PID X is waiting to accept session
+> Prints out a list of all existing members from the memory mapped file
+> Client 1 starts a session: "start John Cena"
+> Client 2 starts a session: "start Stevie Ray Vaughan"
+> Client 1 and 2 can continue to modify their accounts
+> Client 1 finishes
+> Server is stopped by SIGINT
+> Client 1 and 2 are exited, and shown a thank you for banking note
